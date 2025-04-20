@@ -2,6 +2,7 @@ package com.tp4.gradesappfirebase;
 
 public class Student {
     private String name;
+    private String cin;
 
     private float noteAndroid;
     private float noteAngular;
@@ -10,36 +11,23 @@ public class Student {
     private float noteC;
     private float noteBigData;
 
+    public Student(String name, String cin, float noteAndroid, float noteAngular, float noteUX, float noteDB, float noteC, float noteBigData) {
+        this.name = name;
+        this.cin = cin;
+        this.noteAndroid = noteAndroid;
+        this.noteAngular = noteAngular;
+        this.noteUX = noteUX;
+        this.noteDB = noteDB;
+        this.noteC = noteC;
+        this.noteBigData = noteBigData;
+    }
+
     public Student() {
 
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setNoteAndroid(float noteAndroid) {
-        this.noteAndroid = noteAndroid;
-    }
-
-    public void setNoteAngular(float noteAngular) {
-        this.noteAngular = noteAngular;
-    }
-
-    public void setNoteUX(float noteUX) {
-        this.noteUX = noteUX;
-    }
-
-    public void setNoteDB(float noteDB) {
-        this.noteDB = noteDB;
-    }
-
-    public void setNoteC(float noteC) {
-        this.noteC = noteC;
-    }
-
-    public void setNoteBigData(float noteBigData) {
-        this.noteBigData = noteBigData;
+    public String getCin() {
+        return this.cin;
     }
 
     public String getName() {

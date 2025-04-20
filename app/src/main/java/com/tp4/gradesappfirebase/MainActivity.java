@@ -13,17 +13,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView lst;
+
     ArrayList<String> allStudents = new ArrayList<>();// = {"Sara", "Samira", "Sami"};
     ArrayList<String> Notes = new ArrayList<>();
     String[] allTopics = {"Android", "Angular", "UX", "Databases", "C++", "Big Data"};
@@ -43,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
 //    };
 
     AutoCompleteTextView autoSaisie;
-    DatabaseReference databaseReference;
+    MyAdapter adapter;
+//    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    DatabaseReference databaseReference;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +65,25 @@ public class MainActivity extends AppCompatActivity {
 
         this.autoSaisie = findViewById(R.id.saisieAuto);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Student");
+         adapter = new MyAdapter(MainActivity.this, Notes);
+
+        lst.setAdapter(adapter);
 
 
 
+        // databaseReference = database.getReference("Student");
         autoSaisie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedStudent = ((TextView) view).getText().toString();
 
-                MyAdapter adapter;
+                String[] all = selectedStudent.split("-");
 
-                getNotes(selectedStudent);
+                getNotes(all[1].trim());
 
-                adapter = new MyAdapter(MainActivity.this, Notes);
+                adapter.notifyDataSetChanged();
+                lst.invalidateViews();
 
-                lst.setAdapter(adapter);
 
                 lst.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -102,68 +116,61 @@ public class MainActivity extends AppCompatActivity {
                 android.R.layout.simple_dropdown_item_1line, this.allStudents);
 
         autoSaisie.setAdapter(ar);
-
-
-
     }
 
     public void goToAdd(View v) {
         Intent i = new Intent(this, AddActivity.class);
-        i.putExtra("child_name", "Student");
+        i.putExtra("collection_name", "Student");
         startActivityForResult(i, 1);
     }
 
     private void getStudentsName() {
         this.allStudents.clear();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        CollectionReference studentsRef = db.collection("students");
 
-                for (DataSnapshot ds : snapshot.getChildren()) {
-
-                    Student s = ds.getValue(Student.class);
-
-                    allStudents.add(s.getName());
-
+        studentsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Student> studentList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Student student = document.toObject(Student.class);
+                    this.allStudents.add(student.getName() + " - " + student.getCin());
                 }
-
-                //Toast.makeText(InfosActivity.this, value, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-                Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+            } else {
+                System.err.println("Erreur lors de la récupération des étudiants : " + task.getException());
             }
         });
+
+
 
     }
 
-    public void getNotes(final String studentName) {
+    public void getNotes(String cin) {
         Notes.clear();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                Student s = new Student();
-                s = snapshot.child(studentName).getValue(Student.class);
-
-                Notes.add(String.valueOf(s.getNoteAndroid()));
-                Notes.add(String.valueOf(s.getNoteAngular()));
-                Notes.add(String.valueOf(s.getNoteUX()));
-                Notes.add(String.valueOf(s.getNoteDB()));
-                Notes.add(String.valueOf(s.getNoteC()));
-                Notes.add(String.valueOf(s.getNoteBigData()));
 
 
-            }
+        CollectionReference studentsRef = db.collection("students");
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        studentsRef.document(cin).get()
+                .addOnSuccessListener(documentSnapshot ->  {
+                    if (documentSnapshot.exists()) {
+                        Student student = documentSnapshot.toObject(Student.class);
 
-                Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        if(student.getCin().equals(cin)) {
+                            Notes.add(String.valueOf(student.getNoteAndroid()));
+                            Notes.add(String.valueOf(student.getNoteAngular()));
+                            Notes.add(String.valueOf(student.getNoteUX()));
+                            Notes.add(String.valueOf(student.getNoteDB()));
+                            Notes.add(String.valueOf(student.getNoteC()));
+                            Notes.add(String.valueOf(student.getNoteBigData()));
+                            MainActivity.this.adapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        System.out.println("Aucun étudiant trouvé avec ce CIN.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    System.err.println("Erreur : " + e.getMessage());
+                });
     }
 }

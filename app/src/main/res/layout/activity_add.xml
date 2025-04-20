@@ -10,37 +10,37 @@
         android:id="@+id/editNoteBigData"
         android:layout_width="154dp"
         android:layout_height="46dp"
-        android:layout_marginTop="148dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Big Data"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/editNoteAndroid"
-        app:layout_constraintHorizontal_bias="0.322"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/editName" />
 
     <EditText
         android:id="@+id/editNoteAndroid"
         android:layout_width="154dp"
         android:layout_height="46dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="Android"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editNoteBigData"
         app:layout_constraintTop_toBottomOf="@+id/editName" />
 
     <EditText
         android:id="@+id/editNoteAngular"
         android:layout_width="154dp"
         android:layout_height="46dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="Angular"
+        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editNoteBigData" />
 
@@ -48,12 +48,14 @@
         android:id="@+id/editNoteUX"
         android:layout_width="154dp"
         android:layout_height="46dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="UX"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.59"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toEndOf="@+id/editNoteAngular"
         app:layout_constraintTop_toBottomOf="@+id/editNoteAndroid" />
 
@@ -61,12 +63,11 @@
         android:id="@+id/editNoteDB"
         android:layout_width="154dp"
         android:layout_height="46dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Databases"
         android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/editNoteC"
-        app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editNoteAngular" />
 
@@ -74,14 +75,18 @@
         android:id="@+id/editNoteC"
         android:layout_width="154dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="C++"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/buttonValider"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toEndOf="@+id/editNoteDB"
         app:layout_constraintTop_toBottomOf="@+id/editNoteUX"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonValider"
@@ -100,10 +105,23 @@
         android:id="@+id/editName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Nom de l'Etudiant"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/editNoteBigData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cin" />
+
+    <EditText
+        android:id="@+id/cin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="N° CIN"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
